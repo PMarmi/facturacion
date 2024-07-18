@@ -12,7 +12,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Repeater;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -78,7 +78,7 @@ class FacturaResource extends Resource
                 
                     
                     // inici repeater
-                Repeater::make('detallesFactura')
+                TableRepeater::make('detallesFactura')
                     ->relationship()
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         $set('total_factura', array_sum(array_column($get('detallesFactura'),'importe')));
@@ -88,7 +88,8 @@ class FacturaResource extends Resource
                         TextInput::make('concepto')
                         ->placeholder('Escriba aqui el concepto')
                         ->required()
-                        ->columnSpan(12),
+                        ->columnSpan(4)
+                        ,
                         TextInput::make('unidades')
                             ->placeholder('Unidades')
                             ->live(onBlur: true)
@@ -103,7 +104,7 @@ class FacturaResource extends Resource
                                 })
                             ->numeric()
                             ->required()
-                            ->columnSpan(2),
+                            ->columnSpan(1),
                         TextInput::make('precio_unidad')
                             ->placeholder('Precio por Unidad')
                             ->live(onBlur: true)
@@ -119,7 +120,7 @@ class FacturaResource extends Resource
                             ->prefix('€')
                             ->numeric()
                             ->required()
-                            ->columnSpan(3),
+                            ->columnSpan(1),
                         TextInput::make('importe')
                             ->placeholder('Campo no modificable')
                             ->live(onBlur: true)
@@ -127,9 +128,16 @@ class FacturaResource extends Resource
                             ->prefix('€')
                             ->numeric()
                             ->required()
-                            ->columnSpan(3),
+                            ->columnSpan(1),
                     ])
-                    ->columns(12)->columnSpan(12)
+                    ->colStyles(function () {
+                        return [
+                            'concepto' => 'width: 500px;',
+                            'unidades' => 'width: 150px;',
+                        ];
+                    })
+                    ->columns(12)
+                    // ->columnSpan(12)
                     // final repeater
             ])->columns(12);
     }
