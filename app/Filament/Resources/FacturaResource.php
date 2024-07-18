@@ -54,16 +54,19 @@ class FacturaResource extends Resource
                 DatePicker::make('vencimiento')
                     ->columnSpan(3),
                 TextInput::make('base_imponible')
+                    ->live(onBlur: true)
                     ->readonly()
                     ->required()
                     ->placeholder('Campo no modificable')
                     ->columnSpan(3),
                 TextInput::make('porcentaje_iva')
+                    ->live(onBlur: true)
                     ->label('Procentaje IVA')
                     ->default(21)
                     ->required()
                     ->columnSpan(3),
                 TextInput::make('cuota_iva')
+                    ->live(onBlur: true)
                     ->label('Cuota IVA')
                     ->readonly()
                     ->required()
@@ -81,8 +84,10 @@ class FacturaResource extends Resource
                 TableRepeater::make('detallesFactura')
                     ->relationship()
                     ->afterStateUpdated(function (Get $get, Set $set) {
-                        $set('total_factura', array_sum(array_column($get('detallesFactura'),'importe')));
+                        // se ejecuta cuando se elimina una línea del repeater
+                        $set('base_imponible', round(array_sum(array_column($get('detallesFactura'),'importe'))),2);
                     })
+                    // Añadir los que faltan
 
                     ->schema([
                         TextInput::make('concepto')
@@ -97,9 +102,14 @@ class FacturaResource extends Resource
                                 if (null == $get('unidades') || null == $get('precio_unidad')){
                                     $set('importe', 0);
                                 } else {
-                                    $parcial=$get('unidades') * $get('precio_unidad');
+                                    $parcial=round($get('unidades') * $get('precio_unidad'),2);
                                     $set('importe', $parcial );
-                                    $set('../../total_factura', array_sum(array_column($get('../../detallesFactura'),'importe')));
+                                    $baseImponible=round(array_sum(array_column($get('../../detallesFactura'),'importe')),2);
+                                    $set('../../base_imponible', $baseImponible);
+                                    $cuotaIva=round($baseImponible * $get('../../porcentaje_iva') / 100,2);
+                                    $set('../../cuota_iva', $cuotaIva);
+                                    $totalFactura=round($baseImponible + $cuotaIva,2);
+                                    $set('../../total_factura', $totalFactura);
                                 }
                                 })
                             ->numeric()
@@ -112,9 +122,14 @@ class FacturaResource extends Resource
                                 if (null == $get('unidades') || null == $get('precio_unidad')){
                                     $set('importe', 0);
                                 } else {
-                                    $parcial=$get('unidades') * $get('precio_unidad');
+                                    $parcial=round($get('unidades') * $get('precio_unidad'),2);
                                     $set('importe', $parcial );
-                                    $set('../../total_factura', array_sum(array_column($get('../../detallesFactura'),'importe')));
+                                    $baseImponible=round(array_sum(array_column($get('../../detallesFactura'),'importe')),2);
+                                    $set('../../base_imponible', $baseImponible);
+                                    $cuotaIva=round($baseImponible * $get('../../porcentaje_iva') / 100,2);
+                                    $set('../../cuota_iva', $cuotaIva);
+                                    $totalFactura=round($baseImponible + $cuotaIva,2);
+                                    $set('../../total_factura', $totalFactura);
                                 }
                                 })
                             ->prefix('€')
@@ -177,7 +192,7 @@ class FacturaResource extends Resource
                 ->label('Cuota IVA')
                 ->sortable()
                 ->toggleable(),
-            TextColumn::make('total_factura')
+            TextColumn::make('base_imponible')
                 ->sortable()
                 ->toggleable(),
 
