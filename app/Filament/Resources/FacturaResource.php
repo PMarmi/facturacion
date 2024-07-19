@@ -46,10 +46,10 @@ class FacturaResource extends Resource
                     ->searchable()
                     ->required()
                     ->columnSpan(3)
-                    ->options(Cliente::pluck('nombre', 'id'))
-                    ,
+                    ->options(Cliente::pluck('nombre', 'id')),
                 DatePicker::make('fecha')
                     ->required()
+                    ->default(now()->format('d-m-Y'))
                     ->columnSpan(3),
                 DatePicker::make('vencimiento')
                     ->columnSpan(3),
@@ -86,6 +86,8 @@ class FacturaResource extends Resource
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         // se ejecuta cuando se elimina una línea del repeater
                         $set('base_imponible', round(array_sum(array_column($get('detallesFactura'),'importe'))),2);
+                        $set('cuota_iva', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva') / 100,2));  
+                        $set('total_factura', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) + round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva') / 100,2),2));
                     })
                     // Añadir los que faltan
 
@@ -177,6 +179,7 @@ class FacturaResource extends Resource
                 ->searchable(),
             TextColumn::make('fecha')
                 ->sortable()
+                ->default(now()->format('d-m-Y'))
                 ->toggleable(),
             TextColumn::make('vencimiento')
                 ->sortable()
