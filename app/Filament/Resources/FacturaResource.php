@@ -12,16 +12,18 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
-use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Placeholder;
 use Filament\Tables\Enums\ActionsPosition;
 use App\Filament\Resources\FacturaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\FacturaResource\RelationManagers;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 
 class FacturaResource extends Resource
 {
@@ -53,35 +55,10 @@ class FacturaResource extends Resource
                     ->columnSpan(3),
                 DatePicker::make('vencimiento')
                     ->columnSpan(3),
-                TextInput::make('base_imponible')
-                    ->live(onBlur: true)
-                    ->readonly()
-                    ->required()
-                    ->placeholder('Campo no modificable')
-                    ->columnSpan(3),
-                TextInput::make('porcentaje_iva')
-                    ->live(onBlur: true)
-                    ->label('Procentaje IVA')
-                    ->default(21)
-                    ->required()
-                    ->columnSpan(3),
-                TextInput::make('cuota_iva')
-                    ->live(onBlur: true)
-                    ->label('Cuota IVA')
-                    ->readonly()
-                    ->required()
-                    ->placeholder('Campo no modificable')
-                    ->columnSpan(3),
-                TextInput::make('total_factura')
-                    ->live(onBlur: true)
-                    ->readonly()
-                    ->required()
-                    ->placeholder('Campo no modificable')
-                    ->columnSpan(3),
-                
+                    
                     
                     // inici repeater
-                TableRepeater::make('detallesFactura')
+                    TableRepeater::make('detallesFactura')
                     ->relationship()
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         // se ejecuta cuando se elimina una línea del repeater
@@ -98,9 +75,9 @@ class FacturaResource extends Resource
                         ->columnSpan(4)
                         ,
                         TextInput::make('unidades')
-                            ->placeholder('Unidades')
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (Get $get, Set $set) {
+                        ->placeholder('Unidades')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (Get $get, Set $set) {
                                 if (null == $get('unidades') || null == $get('precio_unidad')){
                                     $set('importe', 0);
                                 } else {
@@ -134,46 +111,122 @@ class FacturaResource extends Resource
                                     $set('../../total_factura', $totalFactura);
                                 }
                                 })
-                            ->prefix('€')
-                            ->numeric()
-                            ->required()
-                            ->columnSpan(1),
-                        TextInput::make('importe')
-                            ->placeholder('Campo no modificable')
+                                ->prefix('€')
+                                ->numeric()
+                                ->required()
+                                ->columnSpan(1),
+                                TextInput::make('importe')
+                            ->placeholder('---------------------')
                             ->live(onBlur: true)
                             ->readonly()
                             ->prefix('€')
                             ->numeric()
                             ->required()
                             ->columnSpan(1),
-                    ])
-                    ->colStyles(function () {
-                        return [
+                            ])
+                            ->colStyles(function () {
+                                return [
                             'concepto' => 'width: 500px;',
                             'unidades' => 'width: 150px;',
                         ];
                     })
-                    ->columns(12)
+                    ->columns(12),
                     // ->columnSpan(12)
                     // final repeater
-            ])->columns(12);
-    }
 
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-            TextColumn::make('id')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                    Section::make('Contenedor')
+                        ->schema([
+                                // Placeholder::make('elemento01'),
+                                // Placeholder::make('elemento02'),
+                                // Placeholder::make('elemento03'),
+                            TextInput::make('base_imponible')
+                            ->live(onBlur: true)
+                            ->inlinelabel()
+                            ->extraInputAttributes([
+                                'style' => 'text-align: right;'
+                            ])
+                            ->readonly()
+                            ->placeholder('------------------------------------------')
+                            ->columnSpan(4),
+                            TextInput::make('porcentaje_iva')
+                            ->live(onBlur: true)
+                            ->inlinelabel()
+                            ->label('Procentaje IVA')
+                            ->default(21)
+                            ->extraInputAttributes([
+                                'style' => 'text-align: right;'
+                            ])
+                            ->columnSpan(4),
+                        ])
+                        ->extraAttributes([
+                            'style' => 'display: grid; grid-auto-rows: min-content; grid-template-columns: 60% 40%;'
+                        ])
+                        ,
+                    Placeholder::make('')
+                        ->columnSpan(8),
+                    TextInput::make('base_imponible')
+                        ->live(onBlur: true)
+                        ->inlinelabel()
+                        ->extraInputAttributes([
+                            'style' => 'text-align: right;'
+                        ])
+                        ->readonly()
+                        ->placeholder('------------------------------------------')
+                        ->columnSpan(4),
+                    Placeholder::make('')
+                        ->columnSpan(8),
+                    TextInput::make('porcentaje_iva')
+                        ->live(onBlur: true)
+                        ->inlinelabel()
+                        ->label('Procentaje IVA')
+                        ->default(21)
+                        ->extraInputAttributes([
+                            'style' => 'text-align: right;'
+                        ])
+                        ->columnSpan(4),
+                    Placeholder::make('')
+                        ->columnSpan(8),
+                    TextInput::make('cuota_iva')
+                        ->inlinelabel()
+                        ->extraInputAttributes([
+                            'style' => 'text-align: right;'
+                        ])
+                        ->live(onBlur: true)
+                        ->label(fn (Get $get) => 'IVA ' . $get('porcentaje_iva') . '%')
+                        ->readonly()
+                        ->placeholder('------------------------------------------')
+                        ->columnSpan(4),
+                    Placeholder::make('')
+                        ->columnSpan(8),
+                    TextInput::make('total_factura')
+                        ->live(onBlur: true)
+                        ->inlinelabel()
+                        ->readonly()
+                        ->extraInputAttributes([
+                            'style' => 'text-align: right; font-weight: bolder; font-size: 1.1rem;'
+                        ])
+                        // ->required()
+                        ->placeholder('------------------------------------------')
+                        ->columnSpan(4)
+                    ])->columns(12);
+                }
+                
+                public static function table(Table $table): Table
+                {
+                    return $table
+                    ->columns([
+                        TextColumn::make('id')
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('cliente.nombre')
                 ->weight('bold')
                 ->size('xl')
                 ->color('primary')
                 ->sortable()
+                // ->wrap()
                 ->toggleable(),
-                // ->wrap(),
             TextColumn::make('codigo_factura')
+                ->label('Código Factura')
                 ->sortable()
                 ->toggleable()
                 ->searchable(),

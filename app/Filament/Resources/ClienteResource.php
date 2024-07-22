@@ -46,9 +46,11 @@ class ClienteResource extends Resource
                     ->placeholder('Población')
                     ->columnSpan(6),
                 TextInput::make('codigo_postal')
-                    ->placeholder('Población')
+                    ->label('Código Postal')
+                    ->placeholder('Código Postal')
                     ->columnSpan(6),
                 TextInput::make('direccion')
+                    ->label('Dirección')
                     ->placeholder('Dirección')
                     ->columnSpan(12),
                     
