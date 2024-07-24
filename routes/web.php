@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FacturaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+// Route::get('/vistafactura', function () {
+//     return view('facturas.factura');
+// });
+
+
+Route::get('mostrarFactura/{id}', [FacturaController::class, 'mostrarFactura']);

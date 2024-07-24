@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\EurosCast;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Factura extends Model
 {
@@ -20,6 +21,14 @@ class Factura extends Model
         'cuota_iva',
         'total_factura',
     ];
+
+    protected $casts = [
+        'base_imponible' => EurosCast::class,
+        'porcentaje_iva' => EurosCast::class,
+        'cuota_iva' => EurosCast::class,
+        'total_factura' => EurosCast::class,
+    ];
+
 
     // Relación entre facturaS y cliente
     // facturas N:1 cliente

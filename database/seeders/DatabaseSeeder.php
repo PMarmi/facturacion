@@ -27,18 +27,18 @@ class DatabaseSeeder extends Seeder
             "codigo_factura"=> "00000F",
             'fecha' => fake()->date(),
             'vencimiento' => fake()->date(),
-            "base_imponible"=> "1000",
-            "porcentaje_iva"=> "21",
-            "cuota_iva"=> "210",
-            "total_factura"=> "1210",
+            "base_imponible"=> "100000",
+            "porcentaje_iva"=> "2100",
+            "cuota_iva"=> "21000",
+            "total_factura"=> "121000",
         ]);
 
         \App\Models\DetallesFactura::create([
             "factura_id"=> "1",
             "concepto"=> "Patatas",
             "unidades"=> "2",
-            "precio_unidad"=> "2",
-            "importe"=> "4",
+            "precio_unidad"=> "50000",
+            "importe"=> "100000",
 
         ]);
         
