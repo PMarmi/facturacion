@@ -11,11 +11,11 @@ class FacturaController extends Controller
     public function mostrarFactura($id) { 
                               
         $data=Factura::find($id);
-        $detallesdata=DetallesFactura::all()->where('factura_id',$id);
+        // $detallesdata=DetallesFactura::all()->where('factura_id',$id);
 
         return view('facturas.factura',[
             'factura' => $data,
-            'detallesFactura' => $detallesdata
+            // 'detallesFactura' => $detallesdata
         ]);
                             
     } 

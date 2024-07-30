@@ -11,6 +11,7 @@ use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
@@ -287,6 +288,10 @@ class FacturaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make()->label('')->tooltip('Ver'),
                 Tables\Actions\EditAction::make()->label('')->tooltip('Editar'),
+                Action::make('pepe')->label('')->tooltip('Imprimir')
+                ->icon('heroicon-o-printer')
+                ->url(fn (Factura $record) => 'mostrarFactura/' . $record->id)
+                ->openUrlInNewTab(),
             ],position: ActionsPosition::BeforeColumns)->recordUrl(null)->striped()
             ->bulkActions([
                 ExportBulkAction::make()
