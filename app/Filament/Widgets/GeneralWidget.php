@@ -12,7 +12,7 @@ class GeneralWidget extends BaseWidget
     protected function getStats(): array
     {
         $totalFacturas=Factura::count();
-        $ImporteTotalFacturas=Factura::sum('total_factura');
+        $ImporteTotalFacturas=Factura::sum('total_factura')/100;
         return [
             Stat::make('Facturas', $totalFacturas)
             ->icon('heroicon-o-clipboard-document-list')
