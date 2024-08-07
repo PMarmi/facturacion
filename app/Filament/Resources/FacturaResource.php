@@ -191,12 +191,20 @@ class FacturaResource extends Resource
                     TextInput::make('porcentaje_iva')
                         ->afterStateUpdated(function (Get $get, Set $set) {
                             // se ejecuta cuando se elimina una línea del repeater
-                            $set('base_imponible', round(array_sum(array_column($get('detallesFactura'),'importe'))),2);
-                            $set('cuota_iva', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva') / 100,2));  
-                            $set('total_factura', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) + round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva') / 100,2),2));
+                            // if (null !== $get('porcentaje_iva')){
+                                # 
+                                $set('base_imponible', round(array_sum(array_column($get('detallesFactura'),'importe'))),2);
+                                $set('cuota_iva', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva')) / 100,2);  
+                                $set('total_factura', round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) + round(round(array_sum(array_column($get('detallesFactura'),'importe')),2) * $get('porcentaje_iva') / 100,2),2));
+                            // } else {
+                            //     $set('total_factura',77);
+                            // }
                         })
                         ->live(onBlur: true)
+                        ->required()
                         ->numeric()
+                        // ->minValue(0)
+                        ->rules("min:0|max:4")
                         ->inlinelabel()
                         ->label('Procentaje IVA')
                         ->default(21)
