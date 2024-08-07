@@ -44,6 +44,7 @@
     img {
         padding-top: 1%;
         width: 75%;
+        min-width: 225px;
         /* height: 100%;   */
     }
     
@@ -232,7 +233,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=5.0">
     <title>Factura</title>
 </head>
 <body>
@@ -337,7 +338,7 @@
         <div class="footer">
             <div class="mensaje_footer_pagar"><font size="2"> Pagar por transferencia bancaria al siguiente número de cuenta IBAN ES58 0049 1875 5620 1016 6148 / SWIFT BSCHESMM</div>
             <div class="datos_mercantil">Inscrita en el Registro Mercantil de Barcelona, Tomo 48841 , Folio 58, Sección GENERAL, Hoja 598154 - CIF B13950753</div>
-            <div class="web"><a href="https://robustdatasolutions.com">robustdatasolutions.com</a></div></font>
+            <div class="web"><a href="https://robustdatasolutions.com" target="_blank">robustdatasolutions.com</a></div></font>
         </div>
     </footer>
 </body>
