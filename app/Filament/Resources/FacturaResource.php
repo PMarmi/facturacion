@@ -204,7 +204,7 @@ class FacturaResource extends Resource
                         ->required()
                         ->numeric()
                         // ->minValue(0)
-                        ->rules("min:0|max:4")
+                        ->rules("min:0")
                         ->inlinelabel()
                         ->label('Procentaje IVA')
                         ->default(21)
